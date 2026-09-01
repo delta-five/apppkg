@@ -1,0 +1,2 @@
+# apppkg
+Go application package
