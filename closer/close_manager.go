@@ -86,9 +86,9 @@ func (b *closeManager) stop() error {
 		err := stopper.fn(ctx)
 		if err != nil {
 			errs = append(errs, err)
-			logger.Errorf(ctx, "closing of '%s' is failed: %v", stopper.name, err)
+			logger.ErrorKV(ctx, "closing failed", "closer", stopper.name, "error", err)
 		} else {
-			logger.Infof(ctx, "'%s' closed successfully", stopper.name)
+			logger.InfoKV(ctx, "closed successfully", "closer", stopper.name)
 		}
 	}
 
