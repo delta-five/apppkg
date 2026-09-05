@@ -24,6 +24,10 @@ func CloseAll() error {
 	return manager.stop()
 }
 
+func Done() <-chan struct{} {
+	return manager.done()
+}
+
 // CloseFunc — функция остановки без контекста.
 type (
 	CloseFunc func()
