@@ -24,6 +24,7 @@ type closeManager struct {
 	stopTimeout time.Duration
 	cancel      context.CancelFunc
 	stopCalled  bool
+	stopped     chan struct{}
 }
 
 func (b *closeManager) init(ctx context.Context, stopTimeout time.Duration) (context.Context, context.CancelFunc, error) {
@@ -39,8 +40,10 @@ func (b *closeManager) init(ctx context.Context, stopTimeout time.Duration) (con
 
 	b.stopTimeout = stopTimeout
 	b.cancel = cancel
+	b.stopped = make(chan struct{})
 
 	go func(ctx context.Context) {
+		defer close(b.stopped)
 		quit := make(chan os.Signal, 1)
 		signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM, syscall.SIGQUIT)
 		defer signal.Stop(quit)
@@ -112,4 +115,8 @@ func (b *closeManager) add(name string, fn CloseWithContextErrorFunc) error {
 	})
 
 	return nil
+}
+
+func (b *closeManager) done() <-chan struct{} {
+	return b.stopped
 }
