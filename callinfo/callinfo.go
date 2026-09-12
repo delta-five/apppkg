@@ -13,6 +13,7 @@ import (
 // CallInfo — интерфейс служебной информации о запросе, предоставляющий
 // атрибуты для добавления в структурированный лог.
 type CallInfo interface {
+	ID() string
 	Attrs() []slog.Attr
 }
 

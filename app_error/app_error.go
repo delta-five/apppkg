@@ -219,6 +219,11 @@ func (e *AppError) Kind() ErrorKind {
 	return e.kind
 }
 
+// GRPCStatus - обеспечивает соответствие интерфейсу получения кода ошибки gRPC
+func (e *AppError) GRPCStatus() *status.Status {
+	return status.New(e.kind.GRPCCode(), e.msg)
+}
+
 // StackTrace возвращает сохранённый стек вызовов (счётчики команд).
 func (e *AppError) StackTrace() []uintptr {
 	return e.stackTrace
